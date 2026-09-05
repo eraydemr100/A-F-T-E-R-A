@@ -42,14 +42,14 @@ const commands = [
         .addUserOption(opt => opt.name('kullanici').setDescription('Bakılacak kişi').setRequired(false)),
     new SlashCommandBuilder().setName('avatar').setDescription('Kullanıcının avatarını gösterir')
         .addUserOption(opt => opt.name('kullanici').setDescription('Avatarı alınacak kişi').setRequired(false)),
-    new SlashCommandBuilder().setName('sunucu_bilgi').setNameLocalizations({ 'en-US': 'sunucu_bilgi', 'tr': 'sunucu_bilgi' }).setDescription('Sunucu istatistiklerini gösterir'),
+    new SlashCommandBuilder().setName('sunucu_bilgi').setDescription('Sunucu istatistiklerini gösterir'),
     new SlashCommandBuilder().setName('seviye').setDescription('Mevcut seviyenizi ve XP durumunuzu gösterir'),
     new SlashCommandBuilder().setName('siralama').setDescription('Sunucu seviye sıralamasını gösterir'),
 
     // Eğlence & Şans Komutları
     new SlashCommandBuilder().setName('yazi_tura').setDescription('Yazı tura atar'),
     new SlashCommandBuilder().setName('zar').setDescription('Zar atar (1-6)'),
-    new SlashCommandBuilder().setName('8top').setDescription('Sihirli 8-ball sefil sorularınızı yanıtlar')
+    new SlashCommandBuilder().setName('8top').setDescription('Sihirli 8-ball sorularınızı yanıtlar')
         .addStringOption(opt => opt.name('soru').setDescription('Sorunuz').setRequired(true)),
     new SlashCommandBuilder().setName('anket').setDescription('Anket oluşturur')
         .addStringOption(opt => opt.name('soru').setDescription('Anket sorusu').setRequired(true)),
@@ -71,9 +71,9 @@ client.once('ready', async () => {
     console.log(`Bot aktif: ${client.user.tag}`);
     const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
     try {
-        // Sunucu ID'ni buraya yazarak komutları anında o sunucuya kaydediyoruz
+        // Komutları doğrudan senin sunucuna (Guild) anında kaydediyoruz
         await rest.put(
-            Routes.applicationGuildCommands(process.env.CLIENT_ID, 'SUNUCU_ID_BURAYA'),
+            Routes.applicationGuildCommands(process.env.CLIENT_ID, '1539711205696999495'),
             { body: commands },
         );
         console.log('Sunucuya özel komutlar anında yüklendi!');
@@ -82,12 +82,11 @@ client.once('ready', async () => {
     }
 });
 
-
 // Sayı Saymaca & XP Sistemi (Mesaj Tabanlı)
 client.on('messageCreate', async message => {
     if (message.author.bot) return;
 
-    // Seviye Sistemi (Her mesaj 10-20 XP kazandırır)
+    // Seviye Sistemi
     const userId = message.author.id;
     if (!levels[userId]) levels[userId] = { xp: 0, level: 1 };
     levels[userId].xp += Math.floor(Math.random() * 11) + 10;
