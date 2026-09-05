@@ -71,12 +71,17 @@ client.once('ready', async () => {
     console.log(`Bot aktif: ${client.user.tag}`);
     const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
     try {
-        await rest.put(Routes.applicationCommands(process.env.CLIENT_ID), { body: commands });
-        console.log('Tüm komutlar başarıyla yüklendi!');
+        // Sunucu ID'ni buraya yazarak komutları anında o sunucuya kaydediyoruz
+        await rest.put(
+            Routes.applicationGuildCommands(process.env.CLIENT_ID, 'SUNUCU_ID_BURAYA'),
+            { body: commands },
+        );
+        console.log('Sunucuya özel komutlar anında yüklendi!');
     } catch (error) {
         console.error(error);
     }
 });
+
 
 // Sayı Saymaca & XP Sistemi (Mesaj Tabanlı)
 client.on('messageCreate', async message => {
