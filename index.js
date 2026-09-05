@@ -9,13 +9,11 @@ const client = new Client({
     ]
 });
 
-// Hafıza Tabanlı Veriler (Ekonomi, Seviye, Sayı Saymaca)
 const economy = {};
 const levels = {};
 const countingChannels = {};
 
 const commands = [
-    // Moderasyon Komutları
     new SlashCommandBuilder().setName('ban').setDescription('Kullanıcıyı sunucudan yasaklar')
         .addUserOption(opt => opt.name('kullanici').setDescription('Yasaklanacak kişi').setRequired(true))
         .setDefaultMemberPermissions(PermissionsBitField.Flags.BanMembers),
@@ -37,7 +35,6 @@ const commands = [
     new SlashCommandBuilder().setName('kanalac').setDescription('Kanalın kilidini açar')
         .setDefaultMemberPermissions(PermissionsBitField.Flags.ManageChannels),
 
-    // Bilgi & Kullanıcı Komutları
     new SlashCommandBuilder().setName('profil').setDescription('Kullanıcı profil bilgini gösterir')
         .addUserOption(opt => opt.name('kullanici').setDescription('Bakılacak kişi').setRequired(false)),
     new SlashCommandBuilder().setName('avatar').setDescription('Kullanıcının avatarını gösterir')
@@ -46,7 +43,6 @@ const commands = [
     new SlashCommandBuilder().setName('seviye').setDescription('Mevcut seviyenizi ve XP durumunuzu gösterir'),
     new SlashCommandBuilder().setName('siralama').setDescription('Sunucu seviye sıralamasını gösterir'),
 
-    // Eğlence & Şans Komutları
     new SlashCommandBuilder().setName('yazi_tura').setDescription('Yazı tura atar'),
     new SlashCommandBuilder().setName('zar').setDescription('Zar atar (1-6)'),
     new SlashCommandBuilder().setName('8top').setDescription('Sihirli 8-ball sorularınızı yanıtlar')
@@ -56,12 +52,10 @@ const commands = [
     new SlashCommandBuilder().setName('itiraf').setDescription('Gizli itiraf gönderir')
         .addStringOption(opt => opt.name('mesaj').setDescription('İtirafınız').setRequired(true)),
 
-    // Booster Komutları
     new SlashCommandBuilder().setName('booster').setDescription('Booster özel rollerini/bilgilerini gösterir'),
     new SlashCommandBuilder().setName('boosterlar').setDescription('Sunucuya boost basanları listeler'),
     new SlashCommandBuilder().setName('boosterbilgi').setDescription('Boost avantajları hakkında bilgi verir'),
 
-    // Özel Sistemler
     new SlashCommandBuilder().setName('bilet_olustur').setDescription('Destek bilet sistemi oluşturur'),
     new SlashCommandBuilder().setName('sayisaymaca_ayarla').setDescription('Bu kanalı sayı saymaca yapar')
         .setDefaultMemberPermissions(PermissionsBitField.Flags.Administrator)
@@ -71,7 +65,6 @@ client.once('ready', async () => {
     console.log(`Bot aktif: ${client.user.tag}`);
     const rest = new REST({ version: '10' }).setToken(process.env.DISCORD_TOKEN);
     try {
-        // Komutları doğrudan senin sunucuna (Guild) anında kaydediyoruz
         await rest.put(
             Routes.applicationGuildCommands(process.env.CLIENT_ID, '1539711205696999495'),
             { body: commands },
@@ -82,11 +75,9 @@ client.once('ready', async () => {
     }
 });
 
-// Sayı Saymaca & XP Sistemi (Mesaj Tabanlı)
 client.on('messageCreate', async message => {
     if (message.author.bot) return;
 
-    // Seviye Sistemi
     const userId = message.author.id;
     if (!levels[userId]) levels[userId] = { xp: 0, level: 1 };
     levels[userId].xp += Math.floor(Math.random() * 11) + 10;
@@ -97,7 +88,6 @@ client.on('messageCreate', async message => {
         message.channel.send(`🎉 Tebrikler ${message.author}, seviye atladın ve **${levels[userId].level}. Seviye** oldun!`);
     }
 
-    // Sayı Saymaca Mantığı
     if (countingChannels[message.channel.id]) {
         const data = countingChannels[message.channel.id];
         const num = parseInt(message.content);
@@ -218,7 +208,7 @@ client.on('interactionCreate', async interaction => {
     }
     else if (commandName === 'sayisaymaca_ayarla') {
         countingChannels[interaction.channel.id] = { lastNumber: 0, lastUser: null };
-        await interaction.reply('✅ Bu kanal **Sayı Saymaca** kanalı olarak ayarlandı! 1 ile başlayabilirsiniz.');
+        await interaction.reply('✅🧪 Bu kanal **Sayı Saymaca** kanalı olarak ayarlandı!');
     }
 });
 
