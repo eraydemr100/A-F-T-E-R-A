@@ -1,3 +1,4 @@
+
 const { Client, GatewayIntentBits, REST, Routes, SlashCommandBuilder, EmbedBuilder, PermissionsBitField } = require('discord.js');
 
 const client = new Client({
@@ -145,5 +146,4 @@ client.on('interactionCreate', async interaction => {
     }
 });
 
-client.login(process.env.DISCORD_TOKEN);MTU0NTc0NTgyNjY5NTg3NjYzOA.GJ9bsE.1vH8-exitBb22I1DVlZfHukoeJEGfUU8XR4EwY
-
+client.login(process.env.DISCORD_TOKEN);
